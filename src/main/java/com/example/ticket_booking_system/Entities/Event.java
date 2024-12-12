@@ -13,24 +13,28 @@ public class Event {
     private int id;
 
     @Column(nullable = false)
-    private String eventName;
+    private String event_name;
 
     @Column(nullable = false)
     private String location;
 
     @Column(nullable = false)
-    private int noOfTickets;
+    private int no_of_tickets;
 
     @Column(nullable = false)
-    private int costPrice;
+    private int cost_price;
 
     @Column(nullable = false)
     private LocalDateTime time;
 
     @Column(nullable = false)
-    private boolean availability = true;
+    private boolean availabilty = true;
 
     @ManyToOne
-    @JoinColumn(name = "vendorID", nullable = false)
+    @JoinColumn(name = "vendorid", nullable = false)
     private User vendor;
+
+
+
+
 }

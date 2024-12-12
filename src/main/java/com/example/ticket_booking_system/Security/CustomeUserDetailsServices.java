@@ -21,7 +21,7 @@ public class CustomeUserDetailsServices  implements UserDetailsService {
         return org.springframework.security.core.userdetails.User
                 .withUsername(user.getUsername())
                 .password(user.getPassword())
-                .roles(user.getType())
+                .authorities(user.getType().toUpperCase()) // Map user type as authority (e.g., "VENDOR")
                 .build();
     }
 }
