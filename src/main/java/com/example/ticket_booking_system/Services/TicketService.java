@@ -72,37 +72,36 @@ public class TicketService {
     }
 
     public void bookTicket(BookRequest bookingRequest) {
-        int ticketsBooked = bookingRequest.getNoOfTickets();
+        int ticketsBooked = bookingRequest.getNumberOfTickets();
 
-        System.out.println(bookingRequest);
-
-        Ticket ticket = ticketRepository.findByEventId(Math.toIntExact(bookingRequest.getEventid()));
-
-
-        int availableTickets = ticket.getAvailabilty();
-
-        // Check if there are enough tickets available
-        if (availableTickets < ticketsBooked) {
-            throw new IllegalArgumentException("Not enough tickets available");
+        // Retrieve the ticket information for the event
+        Ticket ticket = ticketRepository.findByEventId(Math.toIntExact(bookingRequest.getEventId()));
+        if (ticket == null) {
+            throw new IllegalArgumentException("No ticket information available for this event.");
         }
 
-        ticket.setAvailabilty(availableTickets - ticketsBooked);
-        ticketRepository.save(ticket);
-
-
-        //get the user by the id
-        User user = userRepository.findById(bookingRequest.getUserid())
+        int availableTickets = ticket.getAvailabilty();
+        if (availableTickets < ticketsBooked) {
+            throw new IllegalArgumentException("Not enough tickets available");
+        } else {
+            // Update ticket availability
+            ticket.setAvailabilty(availableTickets - ticketsBooked);
+            ticketRepository.save(ticket);
+        }
+        // Retrieve the user
+        User user = userRepository.findById(bookingRequest.getUserId())
                 .orElseThrow(() -> new IllegalArgumentException("User not found"));
 
-
+        // Create a new order
         Order order = new Order();
-        order.setEvent(eventRepository.findById(Math.toIntExact(bookingRequest.getEventid())).orElse(null));
+        order.setEvent(eventRepository.findById(Math.toIntExact(bookingRequest.getEventId()))
+                .orElseThrow(() -> new IllegalArgumentException("Event not found")));
         order.setNoOfTickets(ticketsBooked);
-        order.setTotalAmount(ticket.getPrice());
+        order.setTotalAmount(bookingRequest.getTotalPrice());
         order.setUser(user);
         order.setTicket(ticket);
 
-        //save the order
+        // Save the order
         orderRepository.save(order);
     }
 }

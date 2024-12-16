@@ -14,7 +14,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/events")
@@ -32,6 +34,15 @@ public class EventsController {
 
     @Autowired
     private UserRepository userRepository;
+
+    private ResponseEntity<Map<String, String>> createResponse(String status, String message) {
+        Map<String, String> response = new HashMap<>();
+        response.put("status", status);
+        response.put("message", message);
+        return ResponseEntity.ok(response);
+    }
+
+
 
     @GetMapping("/available")
     public ResponseEntity<HomeResponse> getAllAvailableEvents() {
@@ -58,27 +69,29 @@ public class EventsController {
     }
 
     @PostMapping("/book")
-    public ResponseEntity<String> bookTicket(@RequestHeader("Authorization") String token, @RequestBody BookRequest booking) {
+    public ResponseEntity<Map<String, String>> bookTicket(@RequestHeader("Authorization") String token, @RequestBody BookRequest booking) {
         try {
             System.out.println("Request to book ticket: " + booking);
-            // Extract the username or userid from the JWT token
+
+            // Extract the username from the JWT token
             String jwt = token.substring(7); // Remove "Bearer " prefix
             String username = JWTUtil.extractUsername(jwt); // Decode the username from the token
+            System.out.println("Decoded username: " + username);
 
             // Find the user by username (assuming username is unique)
             User user = userRepository.findByUsername(username)
                     .orElseThrow(() -> new IllegalArgumentException("User not found"));
 
             // Set the user ID in the booking request
-            booking.setUserid(Math.toIntExact(user.getId()));
-
+            booking.setUserId(Math.toIntExact(user.getId()));
 
             // Call the ticketService to process the booking
             ticketService.bookTicket(booking);
 
-            return ResponseEntity.ok("Ticket booked successfully!");
+            return createResponse("success", "Event created successfully.");
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body("Failed to book ticket: " + e.getMessage());
+            e.printStackTrace(); // Print stack trace for debugging
+            return createResponse("error", e.getMessage());
         }
     }
 

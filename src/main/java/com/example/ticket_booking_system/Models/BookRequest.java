@@ -4,10 +4,8 @@ import lombok.Data;
 
 @Data
 public class BookRequest {
-    private long eventid;
-    private int noOfTickets;
-    private int price;
-    private int userid;
-    private int ticketid;
-
+    private long eventId;
+    private int numberOfTickets;
+    private int totalPrice;
+    private int userId;
 }
