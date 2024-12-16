@@ -28,6 +28,8 @@ public class SecurityConfig {
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/auth/**").permitAll()
                         .requestMatchers("/vendor/**").permitAll() // Restrict to VENDOR
+                        .requestMatchers("/tickets/**").permitAll() // Restrict to VENDOR
+                        .requestMatchers("/events/**").permitAll() // Restrict to ADMIN
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)); // Stateless sessions

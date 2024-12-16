@@ -14,14 +14,7 @@ public class EventResponse {
     public int cost_price;
     public boolean availabilty;
     public String vendor;
+    private int ticketavailable;
+    private double  sellingprice;
 
-    public EventResponse(Event event) {
-        this.event_name = event.getEvent_name();
-        this.location = event.getLocation();
-        this.time = event.getTime();
-        this.no_of_tickets = event.getNo_of_tickets();
-        this.cost_price = event.getCost_price();
-        this.availabilty = event.isAvailabilty();
-        this.vendor = event.getVendor().getUsername();
-    }
 }

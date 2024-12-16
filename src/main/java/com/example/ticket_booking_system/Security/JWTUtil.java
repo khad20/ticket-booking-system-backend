@@ -9,7 +9,7 @@ import java.util.Date;
 
 @Component
 public class JWTUtil {
-    private final String SECRET_KEY = "6d75c09d5d4d8898afdecbc8db378dff0040a04782538f25bfa972df16d14102";
+    private static final String SECRET_KEY = "6d75c09d5d4d8898afdecbc8db378dff0040a04782538f25bfa972df16d14102";
     private final long EXPIRATION_TIME = 1000 * 60 * 60 * 10;
 
     public String generateToken(String username) {
@@ -21,7 +21,7 @@ public class JWTUtil {
                 .compact();
     }
 
-    public String extractUsername(String token) {
+    public static String extractUsername(String token) {
         return Jwts.parser()
                 .setSigningKey(SECRET_KEY)
                 .parseClaimsJws(token)

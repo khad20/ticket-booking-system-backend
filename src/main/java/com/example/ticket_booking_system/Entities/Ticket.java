@@ -19,5 +19,5 @@ public class Ticket {
     private int price;
 
     @Column(nullable = false)
-    private int availability;
+    private int availabilty;
 }
